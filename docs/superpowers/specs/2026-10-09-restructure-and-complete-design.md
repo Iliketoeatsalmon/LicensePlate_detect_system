@@ -1,6 +1,8 @@
 # Restructure and complete the LicensePlate detect system — design
 
-Status: draft, waiting for owner review (2026-10-09)
+Status: implemented (2026-10-09). Differences from the draft below: PR 2 and 3 were delivered together in one
+PR; model weights stay in plain git (no LFS) so a plain `git clone` works; `mars-small128.pb` was dropped
+because `deep-sort-realtime` ships its own embedder; the counting line is configured as fractions of the frame (`LINE`).
 
 ## Goal
 Make the repo professional (clean, documented, runnable on macOS/Windows/Linux) and finish the
@@ -46,6 +48,6 @@ pytest for logic that needs no camera/GPU; smoke test `cli read-images` on `CarC
 Anything not run is reported as "not verified".
 
 ## Open decisions (temporary defaults, owner to confirm)
-- Model weights (~70 MB): default Git LFS.
+- Model weights (~70 MB): kept in plain git so `git clone` just works (LFS would need `git lfs` installed).
 - Repo visibility: unknown. If public, rotate the camera password (it is in git history).
   History rewrite needs a force push and happens only on explicit owner instruction.
