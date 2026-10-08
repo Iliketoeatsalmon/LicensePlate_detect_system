@@ -3,10 +3,30 @@ import random
 import cv2
 import numpy as np
 import requests
+from pathlib import Path
+from dotenv import load_dotenv
 from ultralytics import YOLO
 from functions.tracker import Tracker
 
-ip_path = "rtsp://service:Tonkla2249!@192.168.1.103:554/video"
+load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parents[1]  # license_plate_deteection/
+
+
+def pick_device():
+    """DEVICE env: cuda / mps / cpu / auto (default)."""
+    want = os.environ.get("DEVICE", "auto").lower()
+    if want != "auto":
+        return want
+    import torch
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
+
+ip_path = os.environ["RTSP_URL"]
 video_out_path = os.path.join('.', 'out.mp4')
 
 cap = cv2.VideoCapture(ip_path, cv2.CAP_FFMPEG)
@@ -25,7 +45,7 @@ if not ret:
     
 cap_out = cv2.VideoWriter(video_out_path, cv2.VideoWriter_fourcc(*'MP4V'),cap.get(cv2.CAP_PROP_FPS), (frame.shape[1], frame.shape[0]))
 
-model = YOLO("/Users/sarawit/license_plate_deteection/model/yolo11n.pt").to("cuda")
+model = YOLO(str(ROOT_DIR / "model" / "yolo11n.pt")).to(pick_device())
 tracker = Tracker()
 
 colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(100)]
@@ -36,7 +56,7 @@ pt1 = tuple(line_points[0])
 pt2 = tuple(line_points[1])
 line_tolerance = 10
 
-crop_folder = "/Users/sarawit/license_plate_deteection/cctv-traffic/CarCrops"
+crop_folder = str(ROOT_DIR / "CarCrops")
 if not os.path.exists(crop_folder):
     os.makedirs(crop_folder)
 
