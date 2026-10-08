@@ -3,6 +3,7 @@ from Deepsort.deep_sort.tools import generate_detections as gdet
 from Deepsort.deep_sort.deep_sort import nn_matching
 from Deepsort.deep_sort.deep_sort.detection import Detection
 import numpy as np
+from pathlib import Path
 
 class Tracker:
     tracker = None
@@ -13,7 +14,7 @@ class Tracker:
         max_cosine_distance = 0.4
         nn_budget = None
 
-        encoder_model_filename = '/Users/sarawit/license_plate_deteection/model/model_data/mars-small128.pb'
+        encoder_model_filename = str(Path(__file__).resolve().parents[3] / "model" / "model_data" / "mars-small128.pb")
 
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
         self.tracker = DeepSortTracker(metric)

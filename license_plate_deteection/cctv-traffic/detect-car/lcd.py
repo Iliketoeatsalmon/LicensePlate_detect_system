@@ -1,8 +1,9 @@
+import os
 import socket
 
 # ตั้งค่า IP และ PORT ของ Raspberry Pi
-HOST = "192.168.1.101"  # เปลี่ยนเป็น IP ของ Pi
-PORT = 12345
+HOST = os.environ.get("LCD_HOST", "192.168.1.101")  # IP ของ Pi
+PORT = int(os.environ.get("LCD_PORT", "12345"))
 
 message = input("Enter text : ")
 
