@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .env
 .vscode/
+*.egg-info/
+data/
 out.mp4
-*.db
-tempCodeRunnerFile.py
+.pytest_cache/
